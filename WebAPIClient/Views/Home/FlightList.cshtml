@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebAPIClient.Models.FlightM>
+﻿@model IEnumerable<WebAPIClient.Models.FlightListItemM>
 
 <p>
     <a asp-action="Index">Re-Enter Information</a>
@@ -21,34 +21,38 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalRevenue)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FlightNo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Departure)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Destination)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.ActionLink("Book", "Book", item) |
-                    @Html.ActionLink("Details", "Details", new { id = item.FlightNo })
-                    <a asp-action="Book"></a>
-                </td>
-            </tr>
-        }
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FlightNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Departure)
+            </td>
+            <td>
+                @Html.ActionLink(item.Destination, "DestinationDetails", item)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalRevenue)
+            </td>
+            <td>
+                @Html.ActionLink("Book", "Book", item) |
+                @Html.ActionLink("Details", "FlightDetails", item)
+            </td>
+        </tr>
+}
     </tbody>
 </table>

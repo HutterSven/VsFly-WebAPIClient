@@ -44,23 +44,38 @@ namespace WebAPIClient.Controllers
 
             listofFlights = (List<FlightM>)await _vsFly.GetAvailableFligths();
 
-            flights = new List<FlightM>();
+            List<FlightListItemM> flightsList = new List<FlightListItemM>();
 
             foreach(FlightM f in listofFlights)
             {
                 if(f.Date.Year == user.Date.Year && f.Date.Month == user.Date.Month && f.Date.Day== user.Date.Day && f.Destination == user.Destination)
                 {
-                    flights.Add(f);
+                    FlightListItemM li = new FlightListItemM();
+                    li.FlightNo = f.FlightNo;
+                    li.Departure = f.Departure;
+                    li.Destination = f.Destination;
+                    li.Date = f.Date;
+                    li.Price = f.Price;
+                    li.TotalRevenue = _vsFly.GetFlightRevenue(f.FlightNo).Result;
+                    flightsList.Add(li);
                 }
             }
 
-            return View(flights);
+            return View(flightsList);
         }
 
 
 
-        public IActionResult Book(FlightM flight)
+        public IActionResult Book(FlightListItemM flightItem)
         {
+            FlightM flight = new FlightM();
+
+            flight.FlightNo = flightItem.FlightNo;
+            flight.Departure = flightItem.Departure;
+            flight.Destination = flightItem.Destination;
+            flight.Date = flightItem.Date;
+            flight.Price = flightItem.Price;
+
             booking = new BookingM();
 
             booking.FlightNo = flight.FlightNo;
@@ -79,7 +94,22 @@ namespace WebAPIClient.Controllers
             return View(flight2);
         }
 
+        [HttpGet]
+        public IActionResult DestinationDetails(FlightM flight)
+        {
+            DestinationM dest = new DestinationM();
+            dest.Destination = flight.Destination;
+            dest.avgPrice = _vsFly.GetAveragePricePerDestination(flight.Destination).Result;
+            dest.bookings = _vsFly.GetSoldTicketsDest(flight.Destination).Result;
+            
+            return View(dest);
+        }
 
+        [HttpGet]
+        public IActionResult FlightDetails(FlightListItemM flight)
+        {
+            return View(flight);
+        }
 
         public IActionResult Privacy()
         {

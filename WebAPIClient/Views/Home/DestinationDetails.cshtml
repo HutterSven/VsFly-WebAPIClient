@@ -1,0 +1,61 @@
+﻿@model WebAPIClient.Models.DestinationM
+
+<div>
+    <h4>Destination</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Destination)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Destination)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.avgPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.avgPrice)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to Home</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.bookings[0].FlightNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.bookings[0].FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.bookings[0].LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.bookings[0].Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.bookings)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlightNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

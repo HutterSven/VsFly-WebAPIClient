@@ -20,7 +20,7 @@ namespace WebAPIClient.Services
             _baseURI = "https://localhost:5003/api/";
         }
 
-        UserM IVSFlyServices.user { get; set; }
+        UserM IVSFlyServices.User { get; set; }
 
         public async Task<IEnumerable<FlightM>> GetAvailableFligths()
         {
@@ -41,27 +41,27 @@ namespace WebAPIClient.Services
 
         }
 
-        public async Task<IEnumerable<BookingM>> GetSoldTicketsDest(String destination)
+        public async Task<List<PassengerBooking>> GetSoldTicketsDest(String destination)
         {
             var uri = _baseURI + "Bookings/byDest/"+destination;
             List<PassengerBooking> pbl = new List<PassengerBooking>();
             PassengerBooking pb;
 
             var responseString = await _client.GetStringAsync(uri);
-            var bookingsList = JsonConvert.DeserializeObject<IEnumerable<BookingM>>(responseString);
+            var bookingsList = JsonConvert.DeserializeObject<List<ByDestM>>(responseString);
 
-            foreach (BookingM booking in (List<BookingM>)bookingsList)
+            foreach (ByDestM booking in (List<ByDestM>)bookingsList)
             {
                 pb = new PassengerBooking();
                 pb.FlightNo = booking.FlightNo;
                 pb.Price = booking.Price;
-
-                //getPassengers
-
+                pb.FirstName = booking.Firstname;
+                pb.LastName = booking.Lastname;
+                
                 pbl.Add(pb);
             }
 
-            return bookingsList;
+            return pbl;
 
         }
 

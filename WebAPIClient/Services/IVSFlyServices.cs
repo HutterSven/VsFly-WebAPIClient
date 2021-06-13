@@ -8,13 +8,13 @@ namespace WebAPIClient.Services
 {
     public interface IVSFlyServices
     {
-        public UserM user { get; set; }
+        public UserM User { get; set; }
         public Task<IEnumerable<FlightM>> GetAvailableFligths();
 
         public void PostBooking(BookingM booking);
         public Task<PassengerM> PostPassenger(UserM passenger);
 
-        public Task<IEnumerable<BookingM>> GetSoldTicketsDest(String destination);
+        public Task<List<PassengerBooking>> GetSoldTicketsDest(String destination);
 
         public Task<double> GetAveragePricePerDestination(String destination);
 
