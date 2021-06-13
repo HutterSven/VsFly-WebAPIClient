@@ -91,18 +91,17 @@ namespace WebAPIClient.Services
 
         public async void PostBooking(BookingM booking)
         {
-            Uri uri = new Uri(_baseURI + "Bookings");
-            _client.BaseAddress = uri;
             
 
-            var postTask = _client.PostAsJsonAsync<BookingM>("Bookings", booking);
-            postTask.Wait();
+            var postTask = await _client.PostAsJsonAsync<BookingM>("Bookings", booking);
 
-            Console.WriteLine(postTask.Result);
         }
 
         public async Task<PassengerM> PostPassenger(UserM passenger)
         {
+            Uri uri = new Uri(_baseURI + "Passenger");
+            _client.BaseAddress = uri;
+
 
             PassengerM passengerSend = new PassengerM();
             passengerSend.PassengerID = 0;
