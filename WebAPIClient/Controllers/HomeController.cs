@@ -18,7 +18,7 @@ namespace WebAPIClient.Controllers
         List<FlightM> listofFlights;
         List<FlightM> flights;
         BookingM booking;
-        UserM user;
+        public static UserM userTemp;
 
         public HomeController(ILogger<HomeController> logger, IVSFlyServices vsFly)
         {
@@ -35,7 +35,7 @@ namespace WebAPIClient.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> FlightList(UserM user) 
         {
-            _vsFly.user = user;
+            userTemp = user;
             //HttpClient client = new HttpClient();
             //string baseURI = "https://localhost:44322";
 
@@ -64,16 +64,16 @@ namespace WebAPIClient.Controllers
             booking = new BookingM();
 
             booking.FlightNo = flight.FlightNo;
-            booking.PassengerID = 1;
+            
             booking.Price = flight.Price;
 
-            UserM user = new UserM();
-            user.Firstname = "Peter";
-            user.Lastname = "PenisHodensack";
+            int passengerID = _vsFly.PostPassenger(userTemp).Result.PassengerID;
+
+            booking.PassengerID = passengerID;
 
             _vsFly.PostBooking(booking);
 
-            _vsFly.PostPassenger(user);
+            
             FlightM flight2 = flight;
 
             return View(flight2);

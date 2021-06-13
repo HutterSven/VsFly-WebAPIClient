@@ -12,7 +12,7 @@ namespace WebAPIClient.Services
         public Task<IEnumerable<FlightM>> GetAvailableFligths();
 
         public void PostBooking(BookingM booking);
-        public void PostPassenger(UserM passenger);
+        public Task<PassengerM> PostPassenger(UserM passenger);
 
         public Task<IEnumerable<BookingM>> GetSoldTicketsDest(String destination);
 

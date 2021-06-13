@@ -101,7 +101,7 @@ namespace WebAPIClient.Services
             Console.WriteLine(postTask.Result);
         }
 
-        public async void PostPassenger(UserM passenger)
+        public async Task<PassengerM> PostPassenger(UserM passenger)
         {
 
             PassengerM passengerSend = new PassengerM();
@@ -110,9 +110,11 @@ namespace WebAPIClient.Services
             passengerSend.Lastname = passenger.Lastname;
 
 
-            var postTask2 = _client.PostAsJsonAsync<PassengerM>("Passenger", passengerSend);
-            postTask2.Wait();
+            var postTask2 = await _client.PostAsJsonAsync<PassengerM>("Passenger", passengerSend).Result.Content.ReadAsStringAsync();
 
+            PassengerM passengerTemp = JsonConvert.DeserializeObject<PassengerM>(postTask2);
+
+            return passengerTemp;
         }
     }
 }
