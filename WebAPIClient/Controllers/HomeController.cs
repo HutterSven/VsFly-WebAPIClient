@@ -99,7 +99,12 @@ namespace WebAPIClient.Controllers
         {
             DestinationM dest = new DestinationM();
             dest.Destination = flight.Destination;
-            dest.avgPrice = _vsFly.GetAveragePricePerDestination(flight.Destination).Result;
+            double price = _vsFly.GetAveragePricePerDestination(flight.Destination).Result;
+            if(price == 0)
+            {
+                dest.avgPrice = flight.Price;
+            }
+            dest.avgPrice = price;
             dest.bookings = _vsFly.GetSoldTicketsDest(flight.Destination).Result;
             
             return View(dest);
