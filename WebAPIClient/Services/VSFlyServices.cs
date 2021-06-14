@@ -22,6 +22,25 @@ namespace WebAPIClient.Services
 
         UserM IVSFlyServices.User { get; set; }
 
+        public async Task<IEnumerable<FlightM>> GetFligths()
+        {
+            var uri = _baseURI + "Flights";
+
+            var responseString = await _client.GetStringAsync(uri);
+            var flightsList = JsonConvert.DeserializeObject<IEnumerable<FlightM>>(responseString);
+
+            foreach (FlightM f in flightsList)
+            {
+                var PriceUri = _baseURI + "Flights/price/" + f.FlightNo;
+
+                var PriceResponseString = await _client.GetStringAsync(PriceUri);
+                f.Price = double.Parse(PriceResponseString);
+            }
+
+            return flightsList;
+
+        }
+
         public async Task<IEnumerable<FlightM>> GetAvailableFligths()
         {
             var uri = _baseURI + "Flights/available";

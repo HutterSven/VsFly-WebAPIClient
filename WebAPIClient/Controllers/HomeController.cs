@@ -16,7 +16,6 @@ namespace WebAPIClient.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IVSFlyServices _vsFly;
         List<FlightM> listofFlights;
-        List<FlightM> flights;
         BookingM booking;
         public static UserM userTemp;
 
@@ -31,9 +30,27 @@ namespace WebAPIClient.Controllers
             return View();
         }
 
+        public async Task<IActionResult> FlightListAdmin() 
+        {
+            listofFlights = (List<FlightM>)await _vsFly.GetFligths();
+            List<FlightListItemM> flightsList = new List<FlightListItemM>();
+            foreach (FlightM f in listofFlights)
+            {
+                    FlightListItemM li = new FlightListItemM();
+                    li.FlightNo = f.FlightNo;
+                    li.Departure = f.Departure;
+                    li.Destination = f.Destination;
+                    li.Date = f.Date;
+                    li.Price = f.Price;
+                    li.TotalRevenue = _vsFly.GetFlightRevenue(f.FlightNo).Result;
+                    flightsList.Add(li);
+            }
+            return View(flightsList);
+        }
+
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> FlightList(UserM user) 
+        public async Task<IActionResult> FlightListUser(UserM user)
         {
             userTemp = user;
             //HttpClient client = new HttpClient();
@@ -44,20 +61,13 @@ namespace WebAPIClient.Controllers
 
             listofFlights = (List<FlightM>)await _vsFly.GetAvailableFligths();
 
-            List<FlightListItemM> flightsList = new List<FlightListItemM>();
+            List<FlightM> flightsList = new List<FlightM>();
 
-            foreach(FlightM f in listofFlights)
+            foreach (FlightM f in listofFlights)
             {
-                if(f.Date.Year == user.Date.Year && f.Date.Month == user.Date.Month && f.Date.Day== user.Date.Day && f.Destination == user.Destination)
+                if (f.Date.Year == user.Date.Year && f.Date.Month == user.Date.Month && f.Date.Day == user.Date.Day && f.Destination == user.Destination)
                 {
-                    FlightListItemM li = new FlightListItemM();
-                    li.FlightNo = f.FlightNo;
-                    li.Departure = f.Departure;
-                    li.Destination = f.Destination;
-                    li.Date = f.Date;
-                    li.Price = f.Price;
-                    li.TotalRevenue = _vsFly.GetFlightRevenue(f.FlightNo).Result;
-                    flightsList.Add(li);
+                    flightsList.Add(f);
                 }
             }
 
@@ -111,7 +121,13 @@ namespace WebAPIClient.Controllers
         }
 
         [HttpGet]
-        public IActionResult FlightDetails(FlightListItemM flight)
+        public IActionResult FlightDetailsAdmin(FlightListItemM flight)
+        {
+            return View(flight);
+        }
+
+        [HttpGet]
+        public IActionResult FlightDetailsUser(FlightM flight)
         {
             return View(flight);
         }
